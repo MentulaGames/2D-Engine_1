@@ -1,4 +1,5 @@
-﻿namespace Engine.Core
+﻿using System;
+namespace Engine.Core
 {
     public static class MathF
     {
@@ -30,6 +31,16 @@
         public static float Clamp(float min, float max, float value)
         {
             return value < min ? min : (value > max ? max : value);
+        }
+
+        public static float ToRadian(float angle)
+        {
+            return (float)(angle * (Math.PI / 180f));
+        }
+
+        public static float ToAngle(float radian)
+        {
+            return (float)(radian * (180f / Math.PI));
         }
     }
 }
