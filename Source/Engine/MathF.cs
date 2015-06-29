@@ -1,13 +1,17 @@
-﻿using System;
-namespace Engine.Core
+﻿namespace Mentula.Engine.Core
 {
+    using System;
+    using System.Runtime.CompilerServices;
+
     public static class MathF
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Squared(float value)
         {
             return value * value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Cubed(float value)
         {
             return value * value * value;
@@ -33,11 +37,13 @@ namespace Engine.Core
             return value < min ? min : (value > max ? max : value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float ToRadian(float angle)
         {
             return (float)(angle * (Math.PI / 180f));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float ToAngle(float radian)
         {
             return (float)(radian * (180f / Math.PI));

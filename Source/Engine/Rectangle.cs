@@ -1,11 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-
-namespace Engine.Core
+﻿namespace Mentula.Engine.Core
 {
+    using System;
+    using System.Diagnostics;
+
     [DebuggerDisplay("{ToString()}")]
     [Serializable]
-    public struct Rectangle
+    public struct Rectangle : IEquatable<Rectangle>
     {
         public int Height;
         public int Width;
@@ -154,16 +154,14 @@ namespace Engine.Core
 
         public override int GetHashCode()
         {
-            const int MULTIPLYR = 16777619;
-
             unchecked
             {
-                int hash = (int)2166136261;
+                int hash = Utils.HASH_BASE;
 
-                hash *= MULTIPLYR ^ X.GetHashCode();
-                hash *= MULTIPLYR ^ Y.GetHashCode();
-                hash *= MULTIPLYR ^ Width.GetHashCode();
-                hash *= MULTIPLYR ^ Height.GetHashCode();
+                hash *= Utils.HASH_MULTIPLIER ^ X.GetHashCode();
+                hash *= Utils.HASH_MULTIPLIER ^ Y.GetHashCode();
+                hash *= Utils.HASH_MULTIPLIER ^ Width.GetHashCode();
+                hash *= Utils.HASH_MULTIPLIER ^ Height.GetHashCode();
 
                 return hash;
             }

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-
-namespace Engine.Core
+﻿namespace Mentula.Engine.Core
 {
+    using System;
+    using System.Diagnostics;
+
     [DebuggerDisplay("{ToString()}")]
     [Serializable]
-    public struct Point
+    public struct Point : IEquatable<Point>
     {
         public int X;
         public int Y;
@@ -56,14 +56,12 @@ namespace Engine.Core
 
         public override int GetHashCode()
         {
-            const int MULTIPLYR = 16777619;
-
             unchecked
             {
-                int hash = (int)2166136261;
+                int hash = Utils.HASH_BASE;
 
-                hash *= MULTIPLYR ^ X.GetHashCode();
-                hash *= MULTIPLYR ^ Y.GetHashCode();
+                hash *= Utils.HASH_MULTIPLIER ^ X.GetHashCode();
+                hash *= Utils.HASH_MULTIPLIER ^ Y.GetHashCode();
 
                 return hash;
             }
@@ -72,6 +70,11 @@ namespace Engine.Core
         public override string ToString()
         {
             return "(X:" + X + ", Y:" + Y + ")";
+        }
+
+        public Vect2 ToVecr2()
+        {
+            return new Vect2(X, Y);
         }
     }
 }
