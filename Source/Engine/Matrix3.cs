@@ -6,11 +6,11 @@
     [DebuggerDisplay("{ToString()}")]
     public struct Matrix3 : IEquatable<Matrix3>
     {
-        public float R1_C1, R1_C2, R1_C3;   // X |A, B, C|
-        public float R2_C1, R2_C2, R2_C3;   // Y |D, E, F|
-        public float R3_C1, R3_C2, R3_C3;   // Z |1, 0, 0|
+        public float A, B, C;
+        public float D, E, F;
+        public float G, H, I;
 
-        public Vect2 Translation { get { return new Vect2(R1_C3, R2_C3); } set { R1_C3 = value.X; R2_C3 = value.Y; } }
+        public Vect2 Translation { get { return new Vect2(C, F); } set { C = value.X; F = value.Y; } }
 
         public static readonly Matrix3 Identity;
 
@@ -19,63 +19,33 @@
             float r2c1, float r2c2, float r2c3,
             float r3c1, float r3c2, float r3c3)
         {
-            R1_C1 = r1c1;
-            R1_C2 = r1c2;
-            R1_C3 = r1c3;
-            R2_C1 = r2c1;
-            R2_C2 = r2c2;
-            R2_C3 = r2c3;
-            R3_C1 = r3c1;
-            R3_C2 = r3c2;
-            R3_C3 = r3c3;
+            A = r1c1;
+            B = r1c2;
+            C = r1c3;
+            D = r2c1;
+            E = r2c2;
+            F = r2c3;
+            G = r3c1;
+            H = r3c2;
+            I = r3c3;
         }
 
         public Matrix3(Matrix3 value)
         {
-            R1_C1 = value.R1_C1;
-            R1_C2 = value.R1_C2;
-            R1_C3 = value.R1_C3;
-            R2_C1 = value.R2_C1;
-            R2_C2 = value.R2_C2;
-            R2_C3 = value.R2_C3;
-            R3_C1 = value.R3_C1;
-            R3_C2 = value.R3_C2;
-            R3_C3 = value.R3_C3;
+            A = value.A;
+            B = value.B;
+            C = value.C;
+            D = value.D;
+            E = value.E;
+            F = value.F;
+            G = value.G;
+            H = value.H;
+            I = value.I;
         }
 
         static Matrix3()
         {
             Identity = new Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1);
-        }
-
-        public static Matrix3 Add(Matrix3 m1, Matrix3 m2)
-        {
-            Matrix3 result = new Matrix3();
-
-            result.R1_C1 = m1.R1_C1 + m2.R1_C1;
-            result.R1_C2 = m1.R1_C2 + m2.R1_C2;
-            result.R1_C3 = m1.R1_C3 + m2.R1_C3;
-            result.R2_C1 = m1.R2_C1 + m2.R2_C1;
-            result.R2_C2 = m1.R2_C2 + m2.R2_C2;
-            result.R2_C3 = m1.R2_C3 + m2.R2_C3;
-            result.R3_C1 = m1.R3_C1 + m2.R3_C1;
-            result.R3_C2 = m1.R3_C2 + m2.R3_C2;
-            result.R3_C3 = m1.R3_C3 + m2.R3_C3;
-
-            return result;
-        }
-
-        public static void Add(ref Matrix3 m1, ref Matrix3 m2, out Matrix3 result)
-        {
-            result.R1_C1 = m1.R1_C1 + m2.R1_C1;
-            result.R1_C2 = m1.R1_C2 + m2.R1_C2;
-            result.R1_C3 = m1.R1_C3 + m2.R1_C3;
-            result.R2_C1 = m1.R2_C1 + m2.R2_C1;
-            result.R2_C2 = m1.R2_C2 + m2.R2_C2;
-            result.R2_C3 = m1.R2_C3 + m2.R2_C3;
-            result.R3_C1 = m1.R3_C1 + m2.R3_C1;
-            result.R3_C2 = m1.R3_C2 + m2.R3_C2;
-            result.R3_C3 = m1.R3_C3 + m2.R3_C3;
         }
 
         public static Matrix3 ApplyRotation(float radians)
@@ -96,12 +66,12 @@
 
         public static Matrix3 ApplyScale(float scale)
         {
-            return new Matrix3(scale, 0, 0, 0, scale, 0, 0, 0, scale);
+            return new Matrix3(scale, 0, 0, 0, scale, 0, 0, 0, 1);
         }
 
         public static void ApplyScale(float scale, out Matrix3 result)
         {
-            result = new Matrix3(scale, 0, 0, 0, scale, 0, 0, 0, scale);
+            result = new Matrix3(scale, 0, 0, 0, scale, 0, 0, 0, 1);
         }
 
         public static Matrix3 ApplyScale(Vect2 scale)
@@ -132,15 +102,15 @@
         public bool Equals(Matrix3 other)
         {
             return
-                R1_C1 == other.R1_C1 &&
-                R1_C2 == other.R1_C2 &&
-                R1_C3 == other.R1_C3 &&
-                R2_C1 == other.R2_C1 &&
-                R2_C2 == other.R2_C2 &&
-                R2_C3 == other.R2_C3 &&
-                R3_C1 == other.R3_C1 &&
-                R3_C2 == other.R3_C2 &&
-                R3_C3 == other.R3_C3;
+                A == other.A &&
+                B == other.B &&
+                C == other.C &&
+                D == other.D &&
+                E == other.E &&
+                F == other.F &&
+                G == other.G &&
+                H == other.H &&
+                I == other.I;
         }
 
         public override int GetHashCode()
@@ -149,28 +119,77 @@
             {
                 int hash = Utils.HASH_BASE;
 
-                hash *= Utils.HASH_MULTIPLIER ^ R1_C1.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ R1_C2.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ R1_C3.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ R2_C1.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ R2_C2.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ R2_C3.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ R3_C1.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ R3_C2.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ R3_C3.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ A.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ B.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ C.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ D.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ E.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ F.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ G.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ H.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ I.GetHashCode();
 
                 return hash;
             }
         }
 
+        public static Matrix3 Multiply(Matrix3 matrix, float multiplier)
+        {
+            Matrix3 result = new Matrix3();
+
+            result.A = matrix.A * multiplier;
+            result.E = matrix.E * multiplier;
+            result.I = matrix.I * multiplier;
+
+            return result;
+        }
+
+        public static void Multiply(ref Matrix3 matrix, float multiplier, out Matrix3 result)
+        {
+            result = new Matrix3();
+            result.A = matrix.A * multiplier;
+            result.E = matrix.E * multiplier;
+            result.I = matrix.I * multiplier;
+        }
+
+        public static Matrix3 Multiply(Matrix3 m1, Matrix3 m2)
+        {
+            Matrix3 result = new Matrix3();
+
+            result.A = m1.A * m2.A + m1.B * m2.D + m1.C * m2.G;
+            result.B = m1.A * m2.B + m1.B * m2.E + m1.C * m2.H;
+            result.C = m1.A * m2.C + m1.B * m2.F + m1.C * m2.I;
+            result.D = m1.D * m2.A + m1.E * m2.D + m1.F * m2.G;
+            result.E = m1.D * m2.B + m1.E * m2.E + m1.F * m2.H;
+            result.F = m1.D * m2.C + m1.E * m2.F + m1.F * m2.I;
+            result.G = m1.G * m2.A + m1.H * m2.D + m1.I * m2.G;
+            result.H = m1.G * m2.B + m1.H * m2.E + m1.I * m2.H;
+            result.I = m1.G * m2.C + m1.H * m2.F + m1.I * m2.I;
+
+            return result;
+        }
+
+        public static void Multiply(ref Matrix3 m1, ref Matrix3 m2, out Matrix3 result)
+        {
+            result.A = m1.A * m2.A + m1.B * m2.D + m1.C * m2.G;
+            result.B = m1.A * m2.B + m1.B * m2.E + m1.C * m2.H;
+            result.C = m1.A * m2.C + m1.B * m2.F + m1.C * m2.I;
+            result.D = m1.D * m2.A + m1.E * m2.D + m1.F * m2.G;
+            result.E = m1.D * m2.B + m1.E * m2.E + m1.F * m2.H;
+            result.F = m1.D * m2.C + m1.E * m2.F + m1.F * m2.I;
+            result.G = m1.G * m2.A + m1.H * m2.D + m1.I * m2.G;
+            result.H = m1.G * m2.B + m1.H * m2.E + m1.I * m2.H;
+            result.I = m1.G * m2.C + m1.H * m2.F + m1.I * m2.I;
+        }
+
         public override string ToString()
         {
-            return "{ (A: " + R1_C1 + ", B: " + R1_C2 + ", C: " + R1_C3 + ") (D: " + R2_C1 + ", E: " + R2_C2 + ", F: " + R2_C3 + ") (G: " + R3_C1 + ", H: " + R3_C2 + ", I: " + R3_C3 + ") }";
+            return "{ (A: " + A + ", B: " + B + ", C: " + C + ") (D: " + D + ", E: " + E + ", F: " + F + ") (G: " + G + ", H: " + H + ", I: " + I + ") }";
         }
 
         public string ToTableString()
         {
-            return "|A: " + R1_C1 + ", B: " + R1_C2 + ", C: " + R1_C3 + "|\n|D: " + R2_C1 + ", E: " + R2_C2 + ", F: " + R2_C3 + "|\n|G: " + R3_C1 + ", H: " + R3_C2 + ", I: " + R3_C3 + "|";
+            return "|" + A + " " + B + " " + C + "|\n|" + D + " " + E + " " + F + "|\n|" + G + " " + H + " " + I + "|";
         }
     }
 }

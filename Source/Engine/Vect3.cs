@@ -242,9 +242,9 @@
             {
                 int hash = Utils.HASH_BASE;
 
-                hash *= Utils.HASH_MULTIPLIER ^ X.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ Y.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ Z.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ X.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ Y.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ Z.GetHashCode();
 
                 return hash;
             }

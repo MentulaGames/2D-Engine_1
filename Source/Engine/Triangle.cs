@@ -60,9 +60,9 @@
             {
                 int hash = Utils.HASH_BASE;
 
-                hash *= Utils.HASH_MULTIPLIER ^ A.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ B.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ C.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ A.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ B.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ C.GetHashCode();
 
                 return hash;
             }

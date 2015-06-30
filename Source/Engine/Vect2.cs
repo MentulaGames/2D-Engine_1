@@ -202,8 +202,8 @@
             {
                 int hash = Utils.HASH_BASE;
 
-                hash *= Utils.HASH_MULTIPLIER ^ X.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ Y.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ X.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ Y.GetHashCode();
 
                 return hash;
             }
@@ -374,16 +374,16 @@
 
         public static Vect2 Transform(Vect2 vect, Matrix3 matrix)
         {
-            float x = (vect.X * matrix.R1_C1) + (vect.Y * matrix.R1_C2);
-            float y = (vect.X * matrix.R2_C1) + (vect.Y * matrix.R2_C2);
+            float x = (vect.X * matrix.A) + (vect.Y * matrix.B);
+            float y = (vect.X * matrix.D) + (vect.Y * matrix.E);
 
             return new Vect2(x, y);
         }
 
         public static void Transform(ref Vect2 vect, ref Matrix3 matrix, out Vect2 result)
         {
-            result.X = (vect.X * matrix.R1_C1) + (vect.Y * matrix.R1_C2);
-            result.Y = (vect.X * matrix.R2_C1) + (vect.Y * matrix.R2_C2);
+            result.X = (vect.X * matrix.A) + (vect.Y * matrix.B);
+            result.Y = (vect.X * matrix.D) + (vect.Y * matrix.E);
         }
 
         public static void Transform(Vect2[] sourceArray, int begin, ref Matrix3 matrix, Vect2[] destinationArray, int destBegin, int length)
@@ -395,8 +395,8 @@
             {
                 Vect2 curr = sourceArray[i];
 
-                float x = (curr.X * matrix.R1_C1) + (curr.Y * matrix.R1_C2);
-                float y = (curr.X * matrix.R2_C1) + (curr.Y * matrix.R2_C2);
+                float x = (curr.X * matrix.A) + (curr.Y * matrix.B);
+                float y = (curr.X * matrix.D) + (curr.Y * matrix.E);
 
                 destinationArray[destBegin + index] = new Vect2(x, y);
                 index++;
@@ -409,8 +409,8 @@
             {
                 Vect2 curr = source[i];
 
-                float x = (curr.X * matrix.R1_C1) + (curr.Y * matrix.R1_C2);
-                float y = (curr.X * matrix.R2_C1) + (curr.Y * matrix.R2_C2);
+                float x = (curr.X * matrix.A) + (curr.Y * matrix.B);
+                float y = (curr.X * matrix.D) + (curr.Y * matrix.E);
 
                 source[i] = new Vect2(x, y);
             }

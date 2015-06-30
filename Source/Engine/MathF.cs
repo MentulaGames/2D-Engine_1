@@ -36,17 +36,5 @@
         {
             return value < min ? min : (value > max ? max : value);
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float ToRadian(float angle)
-        {
-            return (float)(angle * (Math.PI / 180f));
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float ToAngle(float radian)
-        {
-            return (float)(radian * (180f / Math.PI));
-        }
     }
 }

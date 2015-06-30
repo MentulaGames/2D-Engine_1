@@ -158,10 +158,10 @@
             {
                 int hash = Utils.HASH_BASE;
 
-                hash *= Utils.HASH_MULTIPLIER ^ X.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ Y.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ Width.GetHashCode();
-                hash *= Utils.HASH_MULTIPLIER ^ Height.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ X.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ Y.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ Width.GetHashCode();
+                hash = hash * Utils.HASH_MULTIPLIER ^ Height.GetHashCode();
 
                 return hash;
             }
