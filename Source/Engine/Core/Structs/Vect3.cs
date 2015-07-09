@@ -14,15 +14,15 @@
         public float Length { get { return (float)Math.Sqrt((X * X) + (Y * Y) + (Z * Z)); } }
         public float LengthSquared { get { return (X * X) + (Y * Y) + (Z * Z); } }
 
-        public static readonly Vect3 Negative;
-        public static readonly Vect3 Zero;
-        public static readonly Vect3 Right;
-        public static readonly Vect3 Left;
-        public static readonly Vect3 Up;
-        public static readonly Vect3 Down;
-        public static readonly Vect3 Back;
-        public static readonly Vect3 Forward;
-        public static readonly Vect3 One;
+        public static Vect3 Negative { get { return new Vect3(-1); } }
+        public static Vect3 Zero { get { return new Vect3(); } }
+        public static Vect3 Right { get { return new Vect3(1, 0, 0); } }
+        public static Vect3 Left { get { return new Vect3(-1, 0, 0); } }
+        public static Vect3 Up { get { return new Vect3(0, 1, 0); } }
+        public static Vect3 Down { get { return new Vect3(0, -1, 0); } }
+        public static Vect3 Back { get { return new Vect3(0, 0, 1); } }
+        public static Vect3 Forward { get { return new Vect3(0, 0, -1); } }
+        public static Vect3 One { get { return new Vect3(1); } }
 
         public static Vect3 operator -(Vect3 value) { return Negate(value); }
         public static Vect3 operator -(Vect3 value1, Vect3 value2) { return Subtract(value1, value2); }
@@ -54,19 +54,6 @@
             X = value.X;
             Y = value.Y;
             Z = value.Z;
-        }
-
-        static Vect3()
-        {
-            Negative = new Vect3(-1);
-            Zero = new Vect3();
-            Right = new Vect3(1, 0, 0);
-            Left = new Vect3(-1, 0, 0);
-            Up = new Vect3(0, 1, 0);
-            Down = new Vect3(0, -1, 0);
-            Back = new Vect3(0, 0, 1);
-            Forward = new Vect3(0, 0, -1);
-            One = new Vect3(1);
         }
 
         public static Vect3 Add(Vect3 obj1, Vect3 obj2)
@@ -252,12 +239,16 @@
 
         public static Vect3 Lerp(Vect3 obj1, Vect3 obj2, float amount)
         {
+            if (amount < 0 || amount > 1) throw new ArgumentException("amount must be between 0 and 1.");
+
             Vect3 adder = Subtract(obj2, obj1);
             return Multiply(Add(obj1, adder), amount);
         }
 
         public static void Lerp(ref Vect3 obj1, ref Vect3 obj2, float amount, out Vect3 result)
         {
+            if (amount < 0 || amount > 1) throw new ArgumentException("amount must be between 0 and 1.");
+
             Vect3 adder;
             Subtract(ref obj2, ref obj1, out adder);
 

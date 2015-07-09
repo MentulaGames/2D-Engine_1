@@ -14,10 +14,10 @@
         public float Length { get { return (float)Math.Sqrt((X * X) + (Y * Y)); } }
         public float LengthSquared { get { return (X * X) + (Y * Y); } }
 
-        public static readonly Vect2 Zero;
-        public static readonly Vect2 UnitX;
-        public static readonly Vect2 UnitY;
-        public static readonly Vect2 One;
+        public static Vect2 Zero { get { return new Vect2(); } }
+        public static Vect2 UnitX { get { return new Vect2(1, 0); } }
+        public static Vect2 UnitY { get { return new Vect2(0, 1); } }
+        public static Vect2 One { get { return new Vect2(1); } }
 
         public static Vect2 operator -(Vect2 value) { return Negate(value); }
         public static Vect2 operator -(Vect2 value1, Vect2 value2) { return Subtract(value1, value2); }
@@ -25,6 +25,7 @@
         public static Vect2 operator *(float scaleFactor, Vect2 value) { return Multiply(value, scaleFactor); }
         public static Vect2 operator *(Vect2 value, float scaleFactor) { return Multiply(value, scaleFactor); }
         public static Vect2 operator *(Vect2 value1, Vect2 value2) { return Multiply(value1, value2); }
+        public static Vect2 operator *(Vect2 value, Matrix3 matrix) { return Transform(value, matrix); }
         public static Vect2 operator /(Vect2 value1, float divider) { return Divide(value1, divider); }
         public static Vect2 operator /(Vect2 value1, Vect2 value2) { return Divide(value1, value2); }
         public static Vect2 operator +(Vect2 value1, Vect2 value2) { return Add(value1, value2); }
@@ -46,14 +47,6 @@
         {
             X = value.X;
             Y = value.Y;
-        }
-
-        static Vect2()
-        {
-            Zero = new Vect2();
-            UnitX = new Vect2(1, 0);
-            UnitY = new Vect2(0, 1);
-            One = new Vect2(1);
         }
 
         public static Vect2 Add(Vect2 obj1, Vect2 obj2)
@@ -211,12 +204,16 @@
 
         public static Vect2 Lerp(Vect2 obj1, Vect2 obj2, float amount)
         {
+            if (amount < 0 || amount > 1) throw new ArgumentException("amount must be between 0 and 1.");
+
             Vect2 adder = Subtract(obj2, obj1);
             return Multiply(Add(obj1, adder), amount);
         }
 
         public static void Lerp(ref Vect2 obj1, ref Vect2 obj2, float amount, out Vect2 result)
         {
+            if (amount < 0 || amount > 1) throw new ArgumentException("amount must be between 0 and 1.");
+
             Vect2 adder;
             Subtract(ref obj2, ref obj1, out adder);
 

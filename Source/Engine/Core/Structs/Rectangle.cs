@@ -70,7 +70,7 @@
             }
         }
 
-        public static readonly Rectangle Empty;
+        public static Rectangle Empty { get { return new Rectangle(); } }
 
         public Rectangle(int x, int y, int width, int height)
         {
@@ -110,11 +110,6 @@
             Y = value.Y;
             Width = value.Width;
             Height = value.Height;
-        }
-
-        static Rectangle()
-        {
-            Empty = new Rectangle(0, 0, 0, 0);
         }
 
         public bool Contains(int x, int y)

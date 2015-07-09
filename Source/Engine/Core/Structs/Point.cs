@@ -10,10 +10,10 @@
         public int X;
         public int Y;
 
-        public static readonly Point Zero;
-        public static readonly Point UnitX;
-        public static readonly Point UnitY;
-        public static readonly Point One;
+        public static Point Zero { get { return new Point(); } }
+        public static Point UnitX { get { return new Point(1, 0); } }
+        public static Point UnitY { get { return new Point(0, 1); } }
+        public static Point One { get { return new Point(1); } }
 
         public static bool operator !=(Point value1, Point value2) { return !value1.Equals(value2); }
         public static bool operator ==(Point value1, Point value2) { return value1.Equals(value2); }
@@ -34,14 +34,6 @@
         {
             X = value.X;
             Y = value.Y;
-        }
-
-        static Point()
-        {
-            Zero = new Point(0);
-            UnitX = new Point(1, 0);
-            UnitY = new Point(0, 1);
-            One = new Point(1);
         }
 
         public override bool Equals(object obj)

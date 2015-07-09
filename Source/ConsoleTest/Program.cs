@@ -28,21 +28,7 @@ namespace ConsoleTest
         static void Main(string[] args)
         {
             Console.WriteLine("Microsoft\tMentula\n");
-
-            DisplayMatrix();
-            DisplayVector();
-
-            float rads = MathHelper.ToRadians(90);
-
-            m = Matrix.Multiply(m, Matrix.CreateRotationZ(rads));
-            m3 = Matrix3.Multiply(m3, Matrix3.ApplyRotation(rads));
-
-            v = Vector2.Transform(v, m);
-            v2 = Vect2.Transform(v2, m3);
-
-            DisplayMatrix();
-            DisplayVector();
-
+            
             Console.ReadKey();
         }
 

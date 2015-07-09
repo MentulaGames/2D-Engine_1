@@ -16,7 +16,7 @@
         public int Right { get { return Utils.Max(A.X, B.X, C.X); } }
         public int Top { get { return Utils.Min(A.Y, B.Y, C.Y); } }
 
-        public static readonly Triangle Empty;
+        public static Triangle Empty { get { return new Triangle(); } }
 
         public Triangle(int aX, int aY, int bX, int bY, int cX, int cY)
         {
@@ -37,11 +37,6 @@
             A = value.A;
             B = value.B;
             C = value.C;
-        }
-
-        static Triangle()
-        {
-            Empty = new Triangle(0, 0, 0, 0, 0, 0);
         }
 
         public override bool Equals(object obj)

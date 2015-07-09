@@ -12,7 +12,10 @@
 
         public Vect2 Translation { get { return new Vect2(C, F); } set { C = value.X; F = value.Y; } }
 
-        public static readonly Matrix3 Identity;
+        public static Matrix3 Identity { get { return new Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1); } }
+
+        public static Matrix3 operator *(Matrix3 m, float multiplier) { return Multiply(m, multiplier); }
+        public static Matrix3 operator *(Matrix3 m1, Matrix3 m2) { return Multiply(m1, m2); }
 
         public Matrix3(
             float r1c1, float r1c2, float r1c3,
@@ -41,11 +44,6 @@
             G = value.G;
             H = value.H;
             I = value.I;
-        }
-
-        static Matrix3()
-        {
-            Identity = new Matrix3(1, 0, 0, 0, 1, 0, 0, 0, 1);
         }
 
         public static Matrix3 ApplyRotation(float radians)
@@ -190,6 +188,41 @@
         public string ToTableString()
         {
             return "|" + A + " " + B + " " + C + "|\n|" + D + " " + E + " " + F + "|\n|" + G + " " + H + " " + I + "|";
+        }
+
+        public static Matrix3 Transpose(Matrix3 m)
+        {
+            Matrix3 result = new Matrix3(m);
+
+            float b = m.B;
+            float c = m.C;
+            float f = m.F;
+
+            result.B = m.D;
+            result.C = m.G;
+            result.D = b;
+            result.F = m.H;
+            result.G = c;
+            result.H = f;
+
+            return result;
+        }
+
+        public static void Transpose(ref Matrix3 m, out Matrix3 result)
+        {
+            float b = m.B;
+            float c = m.C;
+            float f = m.F;
+
+            result.A = m.A;
+            result.B = m.D;
+            result.C = m.G;
+            result.D = b;
+            result.E = m.E;
+            result.F = m.H;
+            result.G = c;
+            result.H = f;
+            result.I = m.I;
         }
     }
 }

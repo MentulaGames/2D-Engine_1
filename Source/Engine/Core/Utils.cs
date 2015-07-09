@@ -4,6 +4,7 @@
 
     public static class Utils
     {
+        internal const string WINDOW_TITLE = "MyGame";
         internal const int HASH_BASE = unchecked((int)2166136261);
         internal const int HASH_MULTIPLIER = 16777619;
 
