@@ -40,16 +40,13 @@ namespace Mentula.Engine.Core.Input
 
         public static void SetPosition(int x, int y)
         {
-            if (window != null)
-            {
-                window.mouseState.X = x;
-                window.mouseState.Y = y;
+            if (window == null) throw NullWindow;
+            
+            window.mouseState.X = x;
+            window.mouseState.Y = y;
 
-                SystPoint pt = window.PointToScreen(new SystPoint(x, y));
-                SetCursorPos(pt.X, pt.Y);
-            }
-
-            throw NullWindow;
+            SystPoint pt = window.PointToScreen(new SystPoint(x, y));
+            SetCursorPos(pt.X, pt.Y);
         }
 
         [DllImportAttribute("user32.dll", EntryPoint = "SetCursorPos")]

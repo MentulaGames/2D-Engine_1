@@ -112,6 +112,14 @@
             Height = value.Height;
         }
 
+        internal Rectangle(System.Drawing.Rectangle value)
+        {
+            X = value.X;
+            Y = value.Y;
+            Width = value.Width;
+            Height = value.Height;
+        }
+
         public bool Contains(int x, int y)
         {
             return x >= Left && x <= Right && y >= Top && y <= Bottom;

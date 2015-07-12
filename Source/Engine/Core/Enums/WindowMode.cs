@@ -2,8 +2,9 @@
 {
     public enum WindowMode
     {
-        Windowed,
-        Borderless,
-        Fullscreen
+        Windowed = 0,
+        Borderless = 1,
+        BorderlessFullscreen = 2,
+        Fullscreen = 3
     }
 }

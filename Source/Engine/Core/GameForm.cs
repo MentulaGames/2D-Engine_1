@@ -2,8 +2,10 @@
 {
     using Mentula.Engine.Core.Input;
     using System;
+    using System.Diagnostics;
     using System.Windows.Forms;
 
+    [DebuggerDisplay("Handle: {Handle}")]
     internal class GameForm : Form, IDisposable
     {
         private const int WM_KEYDOWN = 0x0100;
@@ -19,11 +21,13 @@
         private const int WM_MBUTTONDOWN = 0x207;
         private const int WM_MBUTTONUP = 0x208;
         private const int WM_MOUSEWHEEL = 0x20A;
+        private const int WM_MOUSELEAVE = 0x02A3;
 
         private const int SC_CLOSE = 0xF060;
         private const int SC_KEYMENU = 0xF100;
 
         public bool AllowAltF4;
+        public bool IsMouseInBounds;
 
         internal MouseState mouseState;
         internal KeyBoardState keyState;
@@ -33,6 +37,17 @@
             AllowAltF4 = false;
             mouseState = new MouseState();
             keyState = new KeyBoardState();
+
+            Mouse.window = this;
+            KeyBoard.window = this;
+
+            Size = new System.Drawing.Size(800, 600);
+        }
+
+        internal void ClampMouse(bool clamp)
+        {
+            if (clamp) Cursor.Clip = new System.Drawing.Rectangle(Location, Size);
+            else Cursor.Clip = new System.Drawing.Rectangle();
         }
 
         protected override void WndProc(ref Message m)
@@ -47,6 +62,11 @@
 
                     mouseState.Y = (int)GET_L_WORD(lParam);
                     mouseState.X = (int)GET_H_WORD(lParam);
+
+                    if (!IsMouseInBounds) IsMouseInBounds = true;
+                    break;
+                case(WM_MOUSELEAVE):
+                    IsMouseInBounds = false;
                     break;
                 case(WM_LBUTTONDOWN):
                     mouseState.LeftButton = true;
@@ -111,17 +131,18 @@
             {
                 Mouse.window = null;
                 KeyBoard.window = null;
+                Cursor.Clip = new System.Drawing.Rectangle();
             }
 
             base.Dispose(disposing);
         }
 
-        private uint GET_L_WORD(int param)
+        internal static uint GET_L_WORD(int param)
         {
             return (uint)param >> 16;
         }
 
-        private uint GET_H_WORD(int param)
+        internal static uint GET_H_WORD(int param)
         {
             return (uint)param & 0xFFFF;
         }
