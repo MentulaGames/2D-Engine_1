@@ -2,7 +2,7 @@
 {
     using System;
 
-    interface IUpdateable
+    public interface IUpdateable
     {
         bool Enabled { get; set; }
         int UpdateIndex { get; set; }

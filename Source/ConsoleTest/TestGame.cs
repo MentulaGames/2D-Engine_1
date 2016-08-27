@@ -1,5 +1,6 @@
 ﻿using Mentula.Engine;
 using Mentula.Engine.Core;
+using Mentula.Engine.Core.Components;
 using Mentula.Engine.Core.Input;
 using System;
 using System.Collections.Generic;
@@ -11,38 +12,37 @@ namespace ConsoleTest
 {
     public class TestGame : Game
     {
-        private TimeSpan oldTime;
-
         public TestGame()
         {
             IsMouseVisible = true;
+            Initialize += InitializeComponents;
+        }
 
-            #region Update
-            Update += (time) =>
-                {
-                    KeyBoardState kState = KeyBoard.GetState();
+        public void InitializeComponents()
+        {
+            Components.Add(new TestComp(this));
+        }
 
-                    if (kState.GetKey(Keys.Escape)) Exit();
-                    if (kState.GetKey(Keys.W))
-                    {
-                        if ((time.TotalGameTime - oldTime).Milliseconds > 250)
-                        {
-                            Window.Mode = (int)Window.Mode + 1 > (int)WindowMode.Fullscreen ? 0 : Window.Mode + 1;
-                            oldTime = time.TotalGameTime;
-                        }
-                    }
-                };
-            #endregion
+        private class TestComp : DrawableGameComponent<TestGame>
+        {
+            public TestComp(TestGame game)
+                : base(game)
+            { }
 
-            #region Draw
-            Draw += (time) =>
-                {
-                    //Console.WriteLine("Fps: {0}             ", Fps);
-                    //Console.WriteLine("Mode: {0}            ", Window.Mode);
-                    //Console.WriteLine("Mouse: {0}           ", Mouse.GetState());
-                    //Console.SetCursorPosition(0, 0);
-                };
-            #endregion
+            public override void Initialize()
+            {
+                base.Initialize();
+            }
+
+            public override void Update(GameTime gameTime)
+            {
+                base.Update(gameTime);
+            }
+
+            public override void Draw(GameTime gameTime)
+            {
+                base.Draw(gameTime);
+            }
         }
     }
 }

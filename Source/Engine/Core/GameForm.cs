@@ -1,8 +1,9 @@
 ﻿namespace Mentula.Engine.Core
 {
-    using Mentula.Engine.Core.Input;
+    using Input;
     using System;
     using System.Diagnostics;
+    using System.Runtime.CompilerServices;
     using System.Windows.Forms;
 
     [DebuggerDisplay("Handle: {Handle}")]
@@ -137,11 +138,13 @@
             base.Dispose(disposing);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static uint GET_L_WORD(int param)
         {
             return (uint)param >> 16;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static uint GET_H_WORD(int param)
         {
             return (uint)param & 0xFFFF;

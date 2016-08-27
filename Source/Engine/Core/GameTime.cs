@@ -58,7 +58,7 @@
 
         public override string ToString()
         {
-            return "Delta: " + ElapsedGameTime.TotalSeconds + ", Lag: " + Lag;
+            return $"Delta: {ElapsedGameTime.TotalSeconds}, Lag: {Lag}";
         }
     }
 }

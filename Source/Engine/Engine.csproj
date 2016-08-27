@@ -60,6 +60,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core.Components\ComponentCollection.cs" />
+    <Compile Include="Core.Components\DrawableGameComponent.cs" />
+    <Compile Include="Core.Components\GameComponent.cs" />
+    <Compile Include="Core.Components\IDrawableGameComponent.cs" />
+    <Compile Include="Core.Components\IGameComponent.cs" />
     <Compile Include="Core\Enums\WindowMode.cs" />
     <Compile Include="Core\GameTime.cs" />
     <Compile Include="Core\GameForm.cs">

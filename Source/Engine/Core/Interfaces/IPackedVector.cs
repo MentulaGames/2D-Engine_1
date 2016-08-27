@@ -1,6 +1,6 @@
 ﻿namespace Mentula.Engine.Core
 {
-    interface IPackedVector<T>
+    public interface IPackedVector<T>
     {
         T PackedValue { get; set; }
     }

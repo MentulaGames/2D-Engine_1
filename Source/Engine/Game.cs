@@ -1,6 +1,7 @@
 ﻿namespace Mentula.Engine
 {
     using Mentula.Engine.Core;
+    using Core.Components;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -10,6 +11,7 @@
     public class Game : IDisposable
     {
         public float Fps { get; private set; }
+        public ComponentCollection Components { get; private set; }
 
         public TimeSpan InactiveSleepTime
         {
@@ -96,6 +98,7 @@
             gameTime = new GameTime();
 
             fpsBuffer = new Queue<float>();
+            Components = new ComponentCollection();
 
             window = new GameWindow();
             Window.Activated += OnActivate;
@@ -201,6 +204,7 @@
             AssertNotDisposed();
 
             if (Update != null) Update(gameTime);
+            Components.Update(gameTime);
         }
 
         internal void DoDraw(GameTime gameTime)
@@ -219,6 +223,8 @@
             if (BeginDraw())
             {
                 if (Draw != null) Draw(gameTime);
+                Components.Draw(gameTime);
+
                 EndDraw();
             }
         }
@@ -229,6 +235,8 @@
             //Init Window
 
             if (Initialize != null) Initialize();
+            Components.Initialze();
+
             if (Load != null) Load();
         }
 
@@ -244,6 +252,8 @@
             {
                 if (disposing)
                 {
+                    Components.Dispose();
+
                     if (window != null)
                     {
                         window.Activated -= OnActivate;
