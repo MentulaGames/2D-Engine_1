@@ -1,8 +1,6 @@
 ﻿namespace Mentula.Engine.Core.Input
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
 
     public struct KeyBoardState : IEquatable<KeyBoardState>
     {

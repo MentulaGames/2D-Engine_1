@@ -15,34 +15,6 @@ namespace ConsoleTest
         public TestGame()
         {
             IsMouseVisible = true;
-            Initialize += InitializeComponents;
-        }
-
-        public void InitializeComponents()
-        {
-            Components.Add(new TestComp(this));
-        }
-
-        private class TestComp : DrawableGameComponent<TestGame>
-        {
-            public TestComp(TestGame game)
-                : base(game)
-            { }
-
-            public override void Initialize()
-            {
-                base.Initialize();
-            }
-
-            public override void Update(GameTime gameTime)
-            {
-                base.Update(gameTime);
-            }
-
-            public override void Draw(GameTime gameTime)
-            {
-                base.Draw(gameTime);
-            }
         }
     }
 }

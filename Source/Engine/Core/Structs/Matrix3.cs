@@ -182,12 +182,12 @@
 
         public override string ToString()
         {
-            return "{ (A: " + A + ", B: " + B + ", C: " + C + ") (D: " + D + ", E: " + E + ", F: " + F + ") (G: " + G + ", H: " + H + ", I: " + I + ") }";
+            return $"{{(A:{A}, B:{B}, C:{C}), (D:{D}, E:{E}), F:{F}), (G:{G}, H:{H}, I:{I})}}";
         }
 
         public string ToTableString()
         {
-            return "|" + A + " " + B + " " + C + "|\n|" + D + " " + E + " " + F + "|\n|" + G + " " + H + " " + I + "|";
+            return $"|{A}, {B}, {C}|\n|{D}, {E}, {F}|\n|{G}, {H}, {I}|";
         }
 
         public static Matrix3 Transpose(Matrix3 m)

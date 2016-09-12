@@ -2,22 +2,30 @@
 {
     using System;
     using System.Diagnostics;
+    using ExtendedMath;
 
     [DebuggerDisplay("{ToString()}")]
     [Serializable]
-    public struct Vect2 : IEquatable<Vect2>
+    public struct Vect2 : IEquatable<Vect2>, IEquatable<Point>
     {
         public float X;
         public float Y;
 
         public float Area { get { return X * Y; } }
-        public float Length { get { return (float)Math.Sqrt((X * X) + (Y * Y)); } }
+        public float Length { get { return (float)Math.Sqrt(LengthSquared); } }
         public float LengthSquared { get { return (X * X) + (Y * Y); } }
 
-        public static Vect2 Zero { get { return new Vect2(); } }
-        public static Vect2 UnitX { get { return new Vect2(1, 0); } }
-        public static Vect2 UnitY { get { return new Vect2(0, 1); } }
-        public static Vect2 One { get { return new Vect2(1); } }
+        public static Vect2 Zero { get { return zero; } }
+        public static Vect2 UnitX { get { return unitX; } }
+        public static Vect2 UnitY { get { return unitY; } }
+        public static Vect2 One { get { return one; } }
+        public static Vect2 Negative { get { return negative; } }
+
+        private static readonly Vect2 zero = new Vect2();
+        private static readonly Vect2 unitX = new Vect2(1, 0);
+        private static readonly Vect2 unitY = new Vect2(0, 1);
+        private static readonly Vect2 one = new Vect2(1);
+        private static readonly Vect2 negative = new Vect2(-1);
 
         public static Vect2 operator -(Vect2 value) { return Negate(value); }
         public static Vect2 operator -(Vect2 value1, Vect2 value2) { return Subtract(value1, value2); }
@@ -49,6 +57,19 @@
             Y = value.Y;
         }
 
+        public static Vect2 Abs(Vect2 obj)
+        {
+            float vX = Math.Abs(obj.X);
+            float vY = Math.Abs(obj.Y);
+            return new Vect2(vX, vY);
+        }
+
+        public static void Abs(ref Vect2 obj, out Vect2 result)
+        {
+            result.X = obj.X < 0 ? -obj.X : obj.X;
+            result.Y = obj.Y < 0 ? -obj.Y : obj.Y;
+        }
+
         public static Vect2 Add(Vect2 obj1, Vect2 obj2)
         {
             Vect2 result = new Vect2();
@@ -77,52 +98,40 @@
 
         public static Vect2 Barycentric(Vect2 vertex1, Vect2 vertex2, Vect2 vertex3, float b2, float b3)
         {
-            float pX = ((1 - b2 - b3) * vertex1.X) + (b2 * vertex2.X) + (b3 * vertex3.X);
-            float pY = ((1 - b2 - b3) * vertex1.Y) + (b2 * vertex2.Y) + (b3 * vertex3.Y);
+            float pX = MathEx.Barycentric(vertex1.X, vertex2.X, vertex3.X, b2, b3);
+            float pY = MathEx.Barycentric(vertex1.Y, vertex2.Y, vertex3.Y, b2, b3);
 
             return new Vect2(pX, pY);
         }
 
         public static void Barycentric(ref Vect2 vertex1, ref Vect2 vertex2, ref Vect2 vertex3, float b2, float b3, out Vect2 result)
         {
-            result.X = ((1 - b2 - b3) * vertex1.X) + (b2 * vertex2.X) + (b3 * vertex3.X);
-            result.Y = ((1 - b2 - b3) * vertex1.Y) + (b2 * vertex2.Y) + (b3 * vertex3.Y);
+            result.X = MathEx.Barycentric(vertex1.X, vertex2.X, vertex3.X, b2, b3);
+            result.Y = MathEx.Barycentric(vertex1.Y, vertex2.Y, vertex3.Y, b2, b3);
         }
 
         public static Vect2 Clamp(Vect2 min, Vect2 max, Vect2 value)
         {
-            float vX = value.X < min.X ? min.X : (value.X > max.X ? max.X : value.X);
-            float vY = value.Y < min.Y ? min.Y : (value.Y > max.Y ? max.Y : value.Y);
+            float vX = MathF.Clamp(min.X, min.X, value.X);
+            float vY = MathF.Clamp(min.Y, max.Y, value.Y);
 
             return new Vect2(vX, vY);
         }
 
         public static void Clamp(ref Vect2 min, ref Vect2 max, ref Vect2 value, out Vect2 result)
         {
-            result.X = value.X < min.X ? min.X : (value.X > max.X ? max.X : value.X);
-            result.Y = value.Y < min.Y ? min.Y : (value.Y > max.Y ? max.Y : value.Y);
+            result.X = MathF.Clamp(min.X, min.X, value.X);
+            result.Y = MathF.Clamp(min.Y, max.Y, value.Y);
         }
 
         public static float Distance(Vect2 obj1, Vect2 obj2)
         {
-            float diffX = obj2.X - obj1.X;
-            float diffY = obj2.Y - obj1.Y;
-
-            float distX = diffX * diffX;
-            float distY = diffY * diffY;
-
-            return (float)Math.Sqrt(distX + distY);
+            return (float)Math.Sqrt(DistanceSquared(obj1, obj2));
         }
 
         public static void Distance(ref Vect2 obj1, ref Vect2 obj2, out float result)
         {
-            float diffX = obj2.X - obj1.X;
-            float diffY = obj2.Y - obj1.Y;
-
-            float distX = diffX * diffX;
-            float distY = diffY * diffY;
-
-            result = (float)Math.Sqrt(distX + distY);
+            result = (float)Math.Sqrt(DistanceSquared(obj1, obj2));
         }
 
         public static float DistanceSquared(Vect2 obj1, Vect2 obj2)
@@ -181,10 +190,17 @@
 
         public override bool Equals(object obj)
         {
-            return GetHashCode() == obj.GetHashCode();
+            if (obj is Vect2) return Equals((Vect2)obj);
+            if (obj is Point) return Equals((Point)obj);
+            return false;
         }
 
         public bool Equals(Vect2 other)
+        {
+            return X == other.X && Y == other.Y;
+        }
+
+        public bool Equals(Point other)
         {
             return X == other.X && Y == other.Y;
         }
@@ -202,54 +218,94 @@
             }
         }
 
-        public static Vect2 Lerp(Vect2 obj1, Vect2 obj2, float amount)
+        public static Vect2 Lerp(Vect2 min, Vect2 max, float amount)
         {
             if (amount < 0 || amount > 1) throw new ArgumentException("amount must be between 0 and 1.");
+            float vX = MathF.Lerp(min.X, max.X, amount);
+            float vY = MathF.Lerp(min.Y, max.Y, amount);
 
-            Vect2 adder = Subtract(obj2, obj1);
-            return Multiply(Add(obj1, adder), amount);
+            return new Vect2(vX, vY);
         }
 
-        public static void Lerp(ref Vect2 obj1, ref Vect2 obj2, float amount, out Vect2 result)
+        public static void Lerp(ref Vect2 min, ref Vect2 max, float amount, out Vect2 result)
         {
             if (amount < 0 || amount > 1) throw new ArgumentException("amount must be between 0 and 1.");
+            result.X = MathF.Lerp(min.X, max.X, amount);
+            result.Y = MathF.Lerp(min.Y, max.Y, amount);
+        }
 
-            Vect2 adder;
-            Subtract(ref obj2, ref obj1, out adder);
+        public static Vect2 Lerp(Vect2 min, Vect2 max, Vect2 amount)
+        {
+            if (amount.Area < 0 || amount.Area > 1) throw new ArgumentException("amount x and y must be between 0 and 1.");
+            float vX = MathF.Lerp(min.X, max.X, amount.X);
+            float vY = MathF.Lerp(min.Y, max.Y, amount.Y);
 
-            result = Multiply(Add(obj1, adder), amount);
+            return new Vect2(vX, vY);
+        }
+
+        public static void Lerp(ref Vect2 min, ref Vect2 max, ref Vect2 amount, out Vect2 result)
+        {
+            if (amount.Area < 0 || amount.Area > 1) throw new ArgumentException("amount x and y must be between 0 and 1.");
+            result.X = MathF.Lerp(min.X, max.X, amount.X);
+            result.Y = MathF.Lerp(min.Y, max.Y, amount.Y);
+        }
+
+        public static Vect2 InvLerp(Vect2 min, Vect2 max, float value)
+        {
+            float vX = MathF.InvLerp(min.X, max.X, value);
+            float vY = MathF.InvLerp(min.Y, max.Y, value);
+            return new Vect2(vX, vY);
+        }
+
+        public static void InvLerp(ref Vect2 min, ref Vect2 max, float value, out Vect2 result)
+        {
+            result.X = MathF.InvLerp(min.X, max.X, value);
+            result.Y = MathF.InvLerp(min.Y, max.Y, value);
+        }
+
+        public static Vect2 InvLerp(Vect2 min, Vect2 max, Vect2 value)
+        {
+            float vX = MathF.InvLerp(min.X, max.X, value.X);
+            float vY = MathF.InvLerp(min.Y, max.Y, value.Y);
+            return new Vect2(vX, vY);
+        }
+
+        public static void InvLerp(ref Vect2 min, ref Vect2 max, ref Vect2 value, out Vect2 result)
+        {
+            result.X = MathF.InvLerp(min.X, max.X, value.X);
+            result.Y = MathF.InvLerp(min.Y, max.Y, value.Y);
         }
 
         public static Vect2 Max(Vect2 obj1, Vect2 obj2)
         {
             Vect2 result = new Vect2();
 
-            result.X = obj1.X > obj2.X ? obj1.X : obj2.X;
-            result.Y = obj1.Y > obj2.Y ? obj1.Y : obj2.Y;
+            result.X = Math.Max(obj1.X, obj2.X);
+            result.Y = Math.Max(obj1.Y, obj2.Y);
 
             return result;
         }
 
         public static void Max(ref Vect2 obj1, ref Vect2 obj2, out Vect2 result)
         {
-            result.X = obj1.X > obj2.X ? obj1.X : obj2.X;
-            result.Y = obj1.Y > obj2.Y ? obj1.Y : obj2.Y;
+            result.X = Math.Max(obj1.X, obj2.X);
+            result.Y = Math.Max(obj1.Y, obj2.Y);
         }
 
         public static Vect2 Min(Vect2 obj1, Vect2 obj2)
         {
             Vect2 result = new Vect2();
 
-            result.X = obj1.X < obj2.X ? obj1.X : obj2.X;
-            result.Y = obj1.Y < obj2.Y ? obj1.Y : obj2.Y;
+            result.X = Math.Min(obj1.X, obj2.X);
+            result.Y = Math.Min(obj1.Y, obj2.Y);
 
             return result;
         }
 
         public static void Min(ref Vect2 obj1, ref Vect2 obj2, out Vect2 result)
         {
-            result.X = obj1.X < obj2.X ? obj1.X : obj2.X;
-            result.Y = obj1.Y < obj2.Y ? obj1.Y : obj2.Y;
+            result.X = Math.Min(obj1.X, obj2.X);
+            result.Y = Math.Min(obj1.Y, obj2.Y);
         }
 
         public static Vect2 Multiply(Vect2 value, float multiplier)
@@ -366,7 +422,7 @@
 
         public override string ToString()
         {
-            return "(X:" + X + ", Y:" + Y + ")";
+            return $"(X: {X}, Y:{Y})";
         }
 
         public static Vect2 Transform(Vect2 vect, Matrix3 matrix)

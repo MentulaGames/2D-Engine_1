@@ -52,6 +52,20 @@
             }
         }
 
+        public Size Size
+        {
+            get
+            {
+                return new Size(Width, Height);
+            }
+
+            set
+            {
+                Width = value.Width;
+                Height = value.Height;
+            }
+        }
+
         public int Right
         {
             get
@@ -70,7 +84,7 @@
             }
         }
 
-        public static Rectangle Empty { get { return new Rectangle(); } }
+        public static readonly Rectangle Empty = new Rectangle();
 
         public Rectangle(int x, int y, int width, int height)
         {
@@ -147,7 +161,8 @@
 
         public override bool Equals(object obj)
         {
-            return GetHashCode() == obj.GetHashCode();
+            if (obj is Rectangle) return Equals((Rectangle)obj);
+            return false;
         }
 
         public bool Equals(Rectangle other)
@@ -292,7 +307,7 @@
 
         public override string ToString()
         {
-            return "(X:" + X + ", Y:" + Y + ", W:" + Width + ", H:" + Height + ")";
+            return $"(X:{X}, Y:{Y}, W:{Width}, H:{Height})";
         }
 
         public static Rectangle Union(Rectangle rect1, Rectangle rect2)

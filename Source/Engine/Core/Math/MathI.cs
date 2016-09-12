@@ -11,12 +11,6 @@
             return value < min ? min : (value > max ? max : value);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int Cubed(int value)
-        {
-            return value * value * value;
-        }
-
         public static int Distance(int value1, int value2)
         {
             value1 = Math.Abs(value1);
@@ -52,12 +46,6 @@
             }
 
             return result;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static int Squared(int value)
-        {
-            return value * value;
         }
     }
 }

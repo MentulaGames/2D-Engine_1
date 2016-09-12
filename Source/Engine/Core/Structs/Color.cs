@@ -1,6 +1,6 @@
 ﻿namespace Mentula.Engine.Core
 {
-    using Mentula.Engine.Core.ExtendedMath;
+    using ExtendedMath;
     using System;
     using System.Diagnostics;
 
@@ -19,19 +19,19 @@
             {
                 uint pack = 0;
 
-                pack |= (uint)(A & 255) << 24;
-                pack |= (uint)(R & 255) << 16;
-                pack |= (uint)(G & 255) << 8;
-                pack |= (uint)(B & 255);
+                pack |= (uint)(A & byte.MaxValue) << 24;
+                pack |= (uint)(R & byte.MaxValue) << 16;
+                pack |= (uint)(G & byte.MaxValue) << 8;
+                pack |= (uint)(B & byte.MaxValue);
 
                 return pack;
             }
             set
             {
-                A = (byte)((value >> 24) & 255);
-                R = (byte)((value >> 16) & 255);
-                G = (byte)((value >> 8) & 255);
-                B = (byte)(value & 255);
+                A = (byte)((value >> 24) & byte.MaxValue);
+                R = (byte)((value >> 16) & byte.MaxValue);
+                G = (byte)((value >> 8) & byte.MaxValue);
+                B = (byte)(value & byte.MaxValue);
             }
         }
 
@@ -41,7 +41,7 @@
 
         public Color(byte value)
         {
-            A = 255;
+            A = byte.MaxValue;
             B = value;
             G = value;
             R = value;
@@ -49,7 +49,7 @@
 
         public Color(int b, int g, int r)
         {
-            A = 255;
+            A = byte.MaxValue;
             B = (byte)MathI.Clamp(byte.MinValue, byte.MaxValue, b);
             G = (byte)MathI.Clamp(byte.MinValue, byte.MaxValue, g);
             R = (byte)MathI.Clamp(byte.MinValue, byte.MaxValue, r);
@@ -105,7 +105,8 @@
 
         public override bool Equals(object obj)
         {
-            return GetHashCode() == obj.GetHashCode();
+            if (obj is Color) return Equals((Color)obj);
+            return false;
         }
 
         public bool Equals(Color other)
@@ -124,7 +125,7 @@
 
             Color result = new Color();
 
-            result.A = (byte)(255 * a);
+            result.A = (byte)(byte.MaxValue * a);
             result.B = (byte)(MathI.Clamp(byte.MinValue, byte.MaxValue, b) * a);
             result.G = (byte)(MathI.Clamp(byte.MinValue, byte.MaxValue, g) * a);
             result.R = (byte)(MathI.Clamp(byte.MinValue, byte.MaxValue, r) * a);
@@ -138,7 +139,7 @@
 
             Color result = new Color();
 
-            result.A = (byte)(255 * value.W);
+            result.A = (byte)(byte.MaxValue * value.W);
             result.B = (byte)(MathF.Clamp(byte.MinValue, byte.MaxValue, value.X) * value.X);
             result.G = (byte)(MathF.Clamp(byte.MinValue, byte.MaxValue, value.Y) * value.Y);
             result.R = (byte)(MathF.Clamp(byte.MinValue, byte.MaxValue, value.Z) * value.Z);
@@ -189,7 +190,7 @@
 
         public override string ToString()
         {
-            return "(B: " + B + ", G: " + G + ", R: " + R + ", A: " + A + ")";
+            return $"(R:{R}, G:{G}, B:{B}, A:{A})";
         }
 
         public Vect3 ToVect3()

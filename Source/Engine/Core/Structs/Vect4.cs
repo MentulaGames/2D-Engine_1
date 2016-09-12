@@ -2,25 +2,38 @@
 {
     using System;
     using System.Diagnostics;
+    using ExtendedMath;
 
     [DebuggerDisplay("{ToString()}")]
     [Serializable]
-    public struct Vect4 : IEquatable<Vect4>, IEquatable<Vect3>, IEquatable<Vect2>
+    public struct Vect4 : IEquatable<Vect4>, IEquatable<Vect3>, IEquatable<Vect2>, IEquatable<Point>
     {
         public float W;
         public float X;
         public float Y;
         public float Z;
 
-        public float Length { get { return (float)Math.Sqrt((W * W) + (X * X) + (Y * Y) + (Z * Z)); } }
+        public float Area { get { return X * Z; } }
+        public float Volume { get { return X * Y * Z; } }
+        public float Volume4D { get { return X * Y * Z * W; } }
+        public float Length { get { return (float)Math.Sqrt(LengthSquared); } }
         public float LengthSquared { get { return (W * W) + (X * X) + (Y * Y) + (Z * Z); } }
 
-        public static Vect4 One { get { return new Vect4(1); } }
-        public static Vect4 UnitW { get { return new Vect4(1, 0, 0, 0); } }
-        public static Vect4 UnitX { get { return new Vect4(0, 1, 0, 0); } }
-        public static Vect4 UnitY { get { return new Vect4(0, 0, 1, 0); } }
-        public static Vect4 UnitZ { get { return new Vect4(0, 0, 0, 1); } }
-        public static Vect4 Zero { get { return new Vect4(); } }
+        public static Vect4 One { get { return one; } }
+        public static Vect4 UnitW { get { return unitW; } }
+        public static Vect4 UnitX { get { return unitX; } }
+        public static Vect4 UnitY { get { return unitY; } }
+        public static Vect4 UnitZ { get { return unitZ; } }
+        public static Vect4 Zero { get { return zero; } }
+        public static Vect4 Negative { get { return negative; } }
+
+        private static readonly Vect4 one = new Vect4(1);
+        private static readonly Vect4 unitW = new Vect4(1, 0, 0, 0);
+        private static readonly Vect4 unitX = new Vect4(0, 1, 0, 0);
+        private static readonly Vect4 unitY = new Vect4(0, 0, 1, 0);
+        private static readonly Vect4 unitZ = new Vect4(0, 0, 0, 1);
+        private static readonly Vect4 zero = new Vect4();
+        private static readonly Vect4 negative = new Vect4(-1);
 
         public static Vect4 operator -(Vect4 value) { return Negate(value); }
         public static Vect4 operator -(Vect4 value1, Vect4 value2) { return Subtract(value1, value2); }
@@ -57,6 +70,24 @@
             Z = value.Z;
         }
 
+        public static Vect4 Abs(Vect4 obj)
+        {
+            float vW = Math.Abs(obj.W);
+            float vX = Math.Abs(obj.X);
+            float vY = Math.Abs(obj.Y);
+            float vZ = Math.Abs(obj.Z);
+
+            return new Vect4(vW, vX, vY, vZ);
+        }
+
+        public static void Abs(ref Vect4 obj, out Vect4 result)
+        {
+            result.W = Math.Abs(obj.W);
+            result.X = Math.Abs(obj.X);
+            result.Y = Math.Abs(obj.Y);
+            result.Z = Math.Abs(obj.Z);
+        }
+
         public static Vect4 Add(Vect4 obj1, Vect4 obj2)
         {
             Vect4 result = new Vect4();
@@ -79,68 +110,48 @@
 
         public static Vect4 Barycentric(Vect4 vertex1, Vect4 vertex2, Vect4 vertex3, float b2, float b3)
         {
-            float pW = ((1 - b2 - b3) * vertex1.W) + (b2 * vertex2.W) + (b3 * vertex3.W);
-            float pX = ((1 - b2 - b3) * vertex1.X) + (b2 * vertex2.X) + (b3 * vertex3.X);
-            float pY = ((1 - b2 - b3) * vertex1.Y) + (b2 * vertex2.Y) + (b3 * vertex3.Y);
-            float pZ = ((1 - b2 - b3) * vertex1.Z) + (b2 * vertex2.Z) + (b3 * vertex3.Z);
+            float pW = MathEx.Barycentric(vertex1.W, vertex2.W, vertex3.W, b2, b3);
+            float pX = MathEx.Barycentric(vertex1.X, vertex2.X, vertex3.X, b2, b3);
+            float pY = MathEx.Barycentric(vertex1.Y, vertex2.Y, vertex3.Y, b2, b3);
+            float pZ = MathEx.Barycentric(vertex1.Z, vertex2.Z, vertex3.Z, b2, b3);
 
             return new Vect4(pW, pX, pY, pZ);
         }
 
         public static void Barycentric(ref Vect4 vertex1, ref Vect4 vertex2, ref Vect4 vertex3, float b2, float b3, out Vect4 result)
         {
-            result.W = ((1 - b2 - b3) * vertex1.W) + (b2 * vertex2.W) + (b3 * vertex3.W);
-            result.X = ((1 - b2 - b3) * vertex1.X) + (b2 * vertex2.X) + (b3 * vertex3.X);
-            result.Y = ((1 - b2 - b3) * vertex1.Y) + (b2 * vertex2.Y) + (b3 * vertex3.Y);
-            result.Z = ((1 - b2 - b3) * vertex1.Z) + (b2 * vertex2.Z) + (b3 * vertex3.Z);
+            result.W = MathEx.Barycentric(vertex1.W, vertex2.W, vertex3.W, b2, b3);
+            result.X = MathEx.Barycentric(vertex1.X, vertex2.X, vertex3.X, b2, b3);
+            result.Y = MathEx.Barycentric(vertex1.Y, vertex2.Y, vertex3.Y, b2, b3);
+            result.Z = MathEx.Barycentric(vertex1.Z, vertex2.Z, vertex3.Z, b2, b3);
         }
 
         public static Vect4 Clamp(Vect4 min, Vect4 max, Vect4 value)
         {
-            float vW = value.W < min.W ? min.W : (value.W > max.W ? max.W : value.W);
-            float vX = value.X < min.X ? min.X : (value.X > max.X ? max.X : value.X);
-            float vY = value.Y < min.Y ? min.Y : (value.Y > max.Y ? max.Y : value.Y);
-            float vZ = value.Z < min.Z ? min.Z : (value.Z > max.Z ? max.Z : value.Z);
+            float vW = MathF.Clamp(min.W, max.W, value.W);
+            float vX = MathF.Clamp(min.X, max.X, value.X);
+            float vY = MathF.Clamp(min.Y, max.Y, value.Y);
+            float vZ = MathF.Clamp(min.Z, max.Z, value.Z);
 
             return new Vect4(vW, vX, vY, vZ);
         }
 
         public static void Clamp(ref Vect4 min, ref Vect4 max, ref Vect4 value, out Vect4 result)
         {
-            result.W = value.W < min.W ? min.W : (value.W > max.W ? max.W : value.W);
-            result.X = value.X < min.X ? min.X : (value.X > max.X ? max.X : value.X);
-            result.Y = value.Y < min.Y ? min.Y : (value.Y > max.Y ? max.Y : value.Y);
-            result.Z = value.Z < min.Z ? min.Z : (value.Z > max.Z ? max.Z : value.Z);
+            result.W = MathF.Clamp(min.W, max.W, value.W);
+            result.X = MathF.Clamp(min.X, max.X, value.X);
+            result.Y = MathF.Clamp(min.Y, max.Y, value.Y);
+            result.Z = MathF.Clamp(min.Z, max.Z, value.Z);
         }
 
         public static float Distance(Vect4 obj1, Vect4 obj2)
         {
-            float diffW = obj2.W - obj1.W;
-            float diffX = obj2.X - obj1.X;
-            float diffY = obj2.Y - obj1.Y;
-            float diffZ = obj2.Z - obj1.Z;
-
-            float distW = diffW * diffW;
-            float distX = diffX * diffX;
-            float distY = diffY * diffY;
-            float distZ = diffZ * diffZ;
-
-            return (float)Math.Sqrt(distW + distX + distY + distZ);
+            return (float)Math.Sqrt(DistanceSquared(obj1, obj2));
         }
 
         public static void Distance(ref Vect4 obj1, ref Vect4 obj2, out float result)
         {
-            float diffW = obj2.W - obj1.W;
-            float diffX = obj2.X - obj1.X;
-            float diffY = obj2.Y - obj1.Y;
-            float diffZ = obj2.Z - obj1.Z;
-
-            float distW = diffW * diffW;
-            float distX = diffX * diffX;
-            float distY = diffY * diffY;
-            float distZ = diffZ * diffZ;
-
-            result = (float)Math.Sqrt(distW + distX + distY + distZ);
+            result = (float)Math.Sqrt(DistanceSquared(obj1, obj2));
         }
 
         public static float DistanceSquared(Vect4 obj1, Vect4 obj2)
@@ -211,12 +222,16 @@
 
         public override bool Equals(object obj)
         {
-            return GetHashCode() == obj.GetHashCode();
+            if (obj is Vect4) return Equals((Vect4)obj);
+            if (obj is Vect3) return Equals((Vect3)obj);
+            if (obj is Vect2) return Equals((Vect2)obj);
+            if (obj is Point) return Equals((Point)obj);
+            return false;
         }
 
-        public bool Equals(Vect2 other)
+        public bool Equals(Vect4 other)
         {
-            return X == other.X && Y == other.Y;
+            return W == other.W && X == other.X && Y == other.Y && Z == other.Z;
         }
 
         public bool Equals(Vect3 other)
@@ -224,9 +239,14 @@
             return X == other.X && Y == other.Y && Z == other.Z;
         }
 
-        public bool Equals(Vect4 other)
+        public bool Equals(Vect2 other)
         {
-            return W == other.W && X == other.X && Y == other.Y && Z == other.Z;
+            return X == other.X && Y == other.Y;
+        }
+
+        public bool Equals(Point other)
+        {
+            return X == other.X && Y == other.Y;
         }
 
         public override int GetHashCode()
@@ -244,62 +264,120 @@
             }
         }
 
-        public static Vect4 Lerp(Vect4 obj1, Vect4 obj2, float amount)
+        public static Vect4 Lerp(Vect4 min, Vect4 max, float amount)
         {
             if (amount < 0 || amount > 1) throw new ArgumentException("amount must be between 0 and 1.");
+            float vW = MathF.Lerp(min.W, max.W, amount);
+            float vX = MathF.Lerp(min.X, max.X, amount);
+            float vY = MathF.Lerp(min.Y, max.Y, amount);
+            float vZ = MathF.Lerp(min.Z, max.Z, amount);
 
-            Vect4 adder = Subtract(obj2, obj1);
-            return Multiply(Add(obj1, adder), amount);
+            return new Vect4(vW, vX, vY, vZ);
         }
 
-        public static void Lerp(ref Vect4 obj1, ref Vect4 obj2, float amount, out Vect4 result)
+        public static void Lerp(ref Vect4 min, ref Vect4 max, float amount, out Vect4 result)
         {
             if (amount < 0 || amount > 1) throw new ArgumentException("amount must be between 0 and 1.");
+            result.W = MathF.Lerp(min.W, max.W, amount);
+            result.X = MathF.Lerp(min.X, max.X, amount);
+            result.Y = MathF.Lerp(min.Y, max.Y, amount);
+            result.Z = MathF.Lerp(min.Z, max.Z, amount);
+        }
 
-            Vect4 adder;
-            Subtract(ref obj2, ref obj1, out adder);
+        public static Vect4 Lerp(Vect4 min, Vect4 max, Vect4 amount)
+        {
+            if (amount.Volume4D < 0 || amount.Volume4D > 1) throw new ArgumentException("amount must be between 0 and 1.");
+            float vW = MathF.Lerp(min.W, max.W, amount.W);
+            float vX = MathF.Lerp(min.X, max.X, amount.X);
+            float vY = MathF.Lerp(min.Y, max.Y, amount.Y);
+            float vZ = MathF.Lerp(min.Z, max.Z, amount.Z);
 
-            result = Multiply(Add(obj1, adder), amount);
+            return new Vect4(vW, vX, vY, vZ);
+        }
+
+        public static void Lerp(ref Vect4 min, ref Vect4 max, ref Vect4 amount, out Vect4 result)
+        {
+            if (amount.Volume4D < 0 || amount.Volume4D > 1) throw new ArgumentException("amount must be between 0 and 1.");
+            result.W = MathF.Lerp(min.W, max.W, amount.W);
+            result.X = MathF.Lerp(min.X, max.X, amount.X);
+            result.Y = MathF.Lerp(min.Y, max.Y, amount.Y);
+            result.Z = MathF.Lerp(min.Z, max.Z, amount.Z);
+        }
+
+        public static Vect4 InvLerp(Vect4 min, Vect4 max, float value)
+        {
+            float vW = MathF.InvLerp(min.W, max.W, value);
+            float vX = MathF.InvLerp(min.X, max.X, value);
+            float vY = MathF.InvLerp(min.Y, max.Y, value);
+            float vZ = MathF.InvLerp(min.Z, max.Z, value);
+
+            return new Vect4(vW, vX, vY, vZ);
+        }
+
+        public static void InvLerp(ref Vect4 min, ref Vect4 max, float value, out Vect4 result)
+        {
+            result.W = MathF.InvLerp(min.W, max.W, value);
+            result.X = MathF.InvLerp(min.X, max.X, value);
+            result.Y = MathF.InvLerp(min.Y, max.Y, value);
+            result.Z = MathF.InvLerp(min.Z, max.Z, value);
+        }
+
+        public static Vect4 InvLerp(Vect4 min, Vect4 max, Vect4 value)
+        {
+            float vW = MathF.InvLerp(min.W, max.W, value.W);
+            float vX = MathF.InvLerp(min.X, max.X, value.X);
+            float vY = MathF.InvLerp(min.Y, max.Y, value.Y);
+            float vZ = MathF.InvLerp(min.Z, max.Z, value.Z);
+
+            return new Vect4(vW, vX, vY, vZ);
+        }
+
+        public static void InvLerp(ref Vect4 min, ref Vect4 max, ref Vect4 value, out Vect4 result)
+        {
+            result.W = MathF.InvLerp(min.W, max.W, value.W);
+            result.X = MathF.InvLerp(min.X, max.X, value.X);
+            result.Y = MathF.InvLerp(min.Y, max.Y, value.Y);
+            result.Z = MathF.InvLerp(min.Z, max.Z, value.Z);
         }
 
         public static Vect4 Max(Vect4 obj1, Vect4 obj2)
         {
             Vect4 result = new Vect4();
 
-            result.W = obj1.W > obj2.W ? obj1.W : obj2.W;
-            result.X = obj1.X > obj2.X ? obj1.X : obj2.X;
-            result.Y = obj1.Y > obj2.Y ? obj1.Y : obj2.Y;
-            result.Z = obj1.Z > obj2.Z ? obj1.Z : obj2.Z;
+            result.W = Math.Max(obj1.W, obj2.W);
+            result.X = Math.Max(obj1.X, obj2.X);
+            result.Y = Math.Max(obj1.Y, obj2.Y);
+            result.Z = Math.Max(obj1.Z, obj2.Z);
 
             return result;
         }
 
         public static void Max(ref Vect4 obj1, ref Vect4 obj2, out Vect4 result)
         {
-            result.W = obj1.W > obj2.W ? obj1.W : obj2.W;
-            result.X = obj1.X > obj2.X ? obj1.X : obj2.X;
-            result.Y = obj1.Y > obj2.Y ? obj1.Y : obj2.Y;
-            result.Z = obj1.Z > obj2.Z ? obj1.Z : obj2.Z;
+            result.W = Math.Max(obj1.W, obj2.W);
+            result.X = Math.Max(obj1.X, obj2.X);
+            result.Y = Math.Max(obj1.Y, obj2.Y);
+            result.Z = Math.Max(obj1.Z, obj2.Z);
         }
 
         public static Vect4 Min(Vect4 obj1, Vect4 obj2)
         {
             Vect4 result = new Vect4();
 
-            result.W = obj1.W < obj2.W ? obj1.W : obj2.W;
-            result.X = obj1.X < obj2.X ? obj1.X : obj2.X;
-            result.Y = obj1.Y < obj2.Y ? obj1.Y : obj2.Y;
-            result.Z = obj1.Z < obj2.Z ? obj1.Z : obj2.Z;
+            result.W = Math.Min(obj1.W, obj2.W);
+            result.X = Math.Min(obj1.X, obj2.X);
+            result.Y = Math.Min(obj1.Y, obj2.Y);
+            result.Z = Math.Min(obj1.Z, obj2.Z);
 
             return result;
         }
 
         public static void Min(ref Vect4 obj1, ref Vect4 obj2, out Vect4 result)
         {
-            result.W = obj1.W < obj2.W ? obj1.W : obj2.W;
-            result.X = obj1.X < obj2.X ? obj1.X : obj2.X;
-            result.Y = obj1.Y < obj2.Y ? obj1.Y : obj2.Y;
-            result.Z = obj1.Z < obj2.Z ? obj1.Z : obj2.Z;
+            result.W = Math.Min(obj1.W, obj2.W);
+            result.X = Math.Min(obj1.X, obj2.X);
+            result.Y = Math.Min(obj1.Y, obj2.Y);
+            result.Z = Math.Min(obj1.Z, obj2.Z);
         }
 
         public static Vect4 Multiply(Vect4 value, float multiplier)
@@ -438,7 +516,7 @@
 
         public override string ToString()
         {
-            return "(W:" + W + ", X:" + X + ", Y:" + Y + ", Z:" + Z + ")";
+            return $"(W:{W}, X:{X}, Y:{Y}, Z:{Z})";
         }
     }
 }

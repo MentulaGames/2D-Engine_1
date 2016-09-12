@@ -16,7 +16,7 @@
         public int Right { get { return Utils.Max(A.X, B.X, C.X); } }
         public int Top { get { return Utils.Min(A.Y, B.Y, C.Y); } }
 
-        public static Triangle Empty { get { return new Triangle(); } }
+        public static Triangle Empty = new Triangle();
 
         public Triangle(int aX, int aY, int bX, int bY, int cX, int cY)
         {
@@ -41,7 +41,8 @@
 
         public override bool Equals(object obj)
         {
-            return GetHashCode() == obj.GetHashCode();
+            if (obj is Triangle) return Equals((Triangle)obj);
+            return false;
         }
 
         public bool Equals(Triangle other)
@@ -65,7 +66,7 @@
 
         public override string ToString()
         {
-            return "A=" + A + ", B=" + B + ", C=" + C;
+            return $"(A:{A}, B:{B}, C:{C})";
         }
     }
 }

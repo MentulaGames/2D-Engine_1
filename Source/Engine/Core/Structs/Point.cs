@@ -10,10 +10,17 @@
         public int X;
         public int Y;
 
-        public static Point Zero { get { return new Point(); } }
-        public static Point UnitX { get { return new Point(1, 0); } }
-        public static Point UnitY { get { return new Point(0, 1); } }
-        public static Point One { get { return new Point(1); } }
+        public static Point Zero { get { return zero; } }
+        public static Point UnitX { get { return unitX; } }
+        public static Point UnitY { get { return unitY; } }
+        public static Point One { get { return one; } }
+        public static Point InvOne { get { return invOne; } }
+
+        private static readonly Point zero = new Point();
+        private static readonly Point unitX = new Point(1, 0);
+        private static readonly Point unitY = new Point(0, 1);
+        private static readonly Point one = new Point(1, 0);
+        private static readonly Point invOne = new Point(-1);
 
         public static bool operator !=(Point value1, Point value2) { return !value1.Equals(value2); }
         public static bool operator ==(Point value1, Point value2) { return value1.Equals(value2); }
@@ -38,7 +45,8 @@
 
         public override bool Equals(object obj)
         {
-            return GetHashCode() == obj.GetHashCode();
+            if (obj is Point) return Equals((Point)obj);
+            return false;
         }
 
         public bool Equals(Point other)
@@ -61,10 +69,10 @@
 
         public override string ToString()
         {
-            return "(X:" + X + ", Y:" + Y + ")";
+            return $"(X:{X}, Y:{Y})";
         }
 
-        public Vect2 ToVecr2()
+        public Vect2 ToVect2()
         {
             return new Vect2(X, Y);
         }

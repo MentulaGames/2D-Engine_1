@@ -74,6 +74,12 @@
             set { form.DesktopLocation = new System.Drawing.Point(value.X, value.Y); }
         }
 
+        public Size Size
+        {
+            get { return new Size(form.Size.Width, form.Size.Height); }
+            set { form.Size = new System.Drawing.Size(value.Width, value.Height); }
+        }
+
         public string Title
         {
             get { return title; }

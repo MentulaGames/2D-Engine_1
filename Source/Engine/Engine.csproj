@@ -78,12 +78,14 @@
     <Compile Include="Core.Input\Structs\MouseState.cs" />
     <Compile Include="Core\Interfaces\IDrawable.cs" />
     <Compile Include="Core\Interfaces\IUpdateable.cs" />
+    <Compile Include="Core\Math\MathEx.cs" />
     <Compile Include="Core\Structs\Color.cs" />
     <Compile Include="Core\Interfaces\IPackedVector.cs" />
     <Compile Include="Core\Math\MathF.cs" />
     <Compile Include="Core\Math\MathI.cs" />
     <Compile Include="Core\Structs\Matrix3.cs" />
     <Compile Include="Core\Structs\Point.cs" />
+    <Compile Include="Core\Structs\Size.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Structs\Rectangle.cs" />
